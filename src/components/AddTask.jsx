@@ -1,16 +1,35 @@
 
+import axios from "axios";
 import { useState } from "react";
 
-function AddTask() {
+function AddTask(props) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // ...logic for creating a new Task should be here
     // ... the ID of the Project should be part of the Task data
 
+    const newTask = {
+      title: title,
+      description: description,
+      projectId: props.projectId
+    }
+
+    try {
+      await axios.post(`${import.meta.env.VITE_SERVER_URL}/tasks`, newTask)
+      console.log("ya se ha creado la tarea")
+      //En este momento no necesito la respuesta ni la info,
+      //  entonces podemos empezar directamente con el await, 
+      // sin guardarlo en una variable
+      props.getData()
+      //!Con getData, se actualiza la info de los detalles del proyecto,
+      //!después de crear una nueva tarea
+    } catch (error) {
+      console.log(error)
+    }
   };
   
   return (
